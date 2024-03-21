@@ -6,17 +6,20 @@ import fs from "fs";
 const pdfInputPath = process.argv[2];
 // for project
 const convertedPdfPath = process.argv[3];
-
 // for now and for testing only
 // const convertedPdfPath = "example.pdf"
+if (fs.existsSync(pdfInputPath)) {
+      const htmlOutputPath = pdfInputPath.replace(".pdf", ".html");
+      const convertedHtmlPath = "temp.html"
 
-const htmlOutputPath = pdfInputPath.replace(".pdf", ".html");
-const convertedHtmlPath = "temp.html"
+      await convertPdfToHtml(pdfInputPath, htmlOutputPath)
+      await convertHtmlLang(htmlOutputPath, convertedHtmlPath, "zh-CN", "en")
+      await convertHtmlToPdf(convertedHtmlPath, convertedPdfPath)
 
-await convertPdfToHtml(pdfInputPath, htmlOutputPath)
-await convertHtmlLang(htmlOutputPath, convertedHtmlPath, "zh-CN", "en")
-await convertHtmlToPdf(convertedHtmlPath, convertedPdfPath)
-
-// removing temporaray htmls in end
-fs.rmSync(htmlOutputPath)
-fs.rmSync(convertedHtmlPath)
+      // removing temporaray htmls in end
+      fs.rmSync(htmlOutputPath)
+      fs.rmSync(convertedHtmlPath)
+}
+else{
+      console.log(`Error: Input file path <${pdfInputPath}> does not exixts`)
+}
